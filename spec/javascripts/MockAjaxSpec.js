@@ -65,5 +65,31 @@ describe('Ajax Mocking Utility', function () {
           expect(result).toEqual('hullo');
       });
     });
+    
+    it('should convert JSON results to JavaScript objects', function() {
+        spyOnUrl({
+            '/test/': '{"test":123}'
+        });
+
+
+        var result;
+        runs(function() {
+          $.ajax({url: "/test/", dataType: 'json',
+            success: function(a_result) {
+                result = a_result;
+            }
+          });
+        });
+
+        waitsFor(function() { 
+          return result !== undefined; 
+        }, 500);
+
+        runs(function() {
+          expect(result.test).toBeDefined();
+          expect(result.test).toEqual(123);
+        });
+
+    });
 });
 
